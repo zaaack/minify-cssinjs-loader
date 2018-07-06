@@ -1,14 +1,14 @@
 # minify-cssinjs-loader
 
 
-[![Build Status](https://travis-ci.org/hydux/minify-cssinjs-loader.svg?branch=master)](https://travis-ci.org/hydux/minify-cssinjs-loader) [![npm](https://img.shields.io/npm/v/minify-cssinjs-loader.svg)](https://www.npmjs.com/package/minify-cssinjs-loader) [![npm](https://img.shields.io/npm/dm/minify-cssinjs-loader.svg)](https://www.npmjs.com/package/minify-cssinjs-loader)
+[![Build Status](https://travis-ci.org/zaaack/minify-cssinjs-loader.svg?branch=master)](https://travis-ci.org/zaaack/minify-cssinjs-loader) [![npm](https://img.shields.io/npm/v/minify-cssinjs-loader.svg)](https://www.npmjs.com/package/minify-cssinjs-loader) [![npm](https://img.shields.io/npm/dm/minify-cssinjs-loader.svg)](https://www.npmjs.com/package/minify-cssinjs-loader)
 
 A webpack loader to minify your css-in-js.
 
 ## Install
 
 ```sh
-yarn add minify-cssinjs-loader # or npm i minify-cssinjs-loader
+yarn add -D minify-cssinjs-loader # or npm i -D minify-cssinjs-loader
 ```
 
 ## Why
@@ -73,7 +73,6 @@ module.exports = {
             target: 'ESNEXT',
             declaration: !__DEV__,
             useTranspileModule: __DEV__,
-            // jsx: 'preserve',
           },
         }, ],
       },
