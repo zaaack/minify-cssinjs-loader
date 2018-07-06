@@ -2,6 +2,12 @@ import * as recast from 'recast'
 import * as loaderUtils from 'loader-utils'
 import './types'
 import cherow from 'cherow'
+import * as util from 'util'
+
+function print(o: any) {
+  console.log(util.inspect(o, false, Infinity, true))
+}
+
 function walkTree(node: any, type: string, callback: (node: any) => boolean | void) {
   if (!node) {
     return
@@ -31,7 +37,7 @@ function walkTree(node: any, type: string, callback: (node: any) => boolean | vo
 }
 
 type TagRule = string | RegExp | ((v: string) => boolean)
-const defaultTagRules: TagRule[] = ['css', 'injectGlobal']
+export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-z]+|\([A-Z][a-z]+\))$/]
 
 function minifyCss(css: string | null) {
   if (!css) return css
@@ -67,11 +73,13 @@ function isCSSTag(tag: string, tagRules: TagRule[]): boolean {
 
 function minifyAst(ast, tagRules: TagRule[]) {
   walkTree(ast, 'TaggedTemplateExpression', (node) => {
-    if (isCSSTag(node.tag && node.tag.name, tagRules)) {
+    if (isCSSTag((recast.print(node.tag).code || '').trim(), tagRules)) {
       walkTree(node, 'TemplateElement', (node) => {
         node.value.cooked = minifyCss(node.value.cooked)
         node.value.raw = minifyCss(node.value.raw) || ''
       })
+    } else {
+      print(ast)
     }
   })
 }

@@ -56,7 +56,7 @@ module.exports = {
         }, {
           loader: 'minify-cssinjs-loader',
           options: {
-            tagRules: [],,
+            tagRules: ['css', 'injectGlobal', ],
           }
         }, {
           loader: "awesome-typescript-loader",
@@ -72,6 +72,35 @@ module.exports = {
   }
 }
 
+```
+
+babel-loader example:
+
+```js
+module.exports = {
+
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: "awesome-typescript-loader",
+          options: {
+            useTranspileModule: true,
+            transpileOnly: true,
+            declaration: false,
+            instance: 'at-loader2'
+          }
+        }, {
+          loader: 'minify-cssinjs-loader',
+          options: {
+            tagRules: [],,
+          }
+        }],
+      },
+    ]
+  }
+}
 ```
 
 ## License

@@ -1,10 +1,10 @@
 import * as assert from 'assert'
-import loader, { Options } from '../'
+import loader, { Options, defaultTagRules } from '../'
 
 function expect(msg: string, input: string, expect: string, opts: Options = {}) {
   let options = {
     query: {
-      tagRules: ['css2', 'css', 'injectGlobal'],
+      tagRules: defaultTagRules.concat('css2'),
       ...opts
     }
   }
@@ -67,5 +67,17 @@ describe('parser', () => {
     css\`display:block;background:url('aa bb') cc dd 1px;\${ c } \`
     css\`display:block;background:url('aa bb') cc dd 1px;\${ c };\`
     injectGlobal\`display:block;background:url('aa bb') cc dd 1px;\${ c } box-shadow:\${a} \${b}px \${c}px \${d};color:\${  e  };.aa{display:block;\${ f };color:\${  e  };&>h2{color:\${  e  };}}\`
+  `)
+
+  expect('styled', `
+      styled.div\`
+        display: block;
+      \`
+      styled(Button)\`
+        display: block;
+      \`
+  `, `
+      styled.div\`display:block;\`
+      styled(Button)\`display:block;\`
   `)
 })
