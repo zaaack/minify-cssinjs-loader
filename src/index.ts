@@ -42,6 +42,8 @@ export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-
 function minifyCss(css: string | null) {
   if (!css) return css
   css = css
+    .replace(/\/\/.*?\n/g, '\n')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\s*(\w+)\s*:\s*([^;]+?)\s*(;|}|$)/g, '$1:$2$3')
     .replace(/\s*(\{|\}|,|;|:)\s*/g, '$1')
     .replace(/(^\s+|\s+$)/g, ' ')

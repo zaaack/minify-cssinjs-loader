@@ -80,4 +80,25 @@ describe('parser', () => {
       styled.div\`display:block;\`
       styled(Button)\`display:block;\`
   `)
+
+  expect('comments', `
+      styled.div\`
+        // js
+        // css
+        display: block; // what
+      \`
+      styled(Button)\`
+        /* awesome */
+        display: block;
+        /** awesome */
+        /*
+
+        aaa
+
+        */
+      \`
+  `, `
+      styled.div\`display:block;\`
+      styled(Button)\`display:block;\`
+  `)
 })
