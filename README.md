@@ -39,6 +39,9 @@ let cls1 = css`color:red;.cls1{display:block;background:url('...') no-repeat;&>h
 awesome-typescript-loader example:
 
 ```js
+
+import { defaultTagRules } from 'minify-cssinjs-loader'
+
 module.exports = {
 
   module: {
@@ -56,7 +59,13 @@ module.exports = {
         }, {
           loader: 'minify-cssinjs-loader',
           options: {
-            tagRules: ['css', 'injectGlobal', ],
+            // default is ['css', 'injectGlobal', /^styled(\.[a-z]+|\([A-Z][a-z]+\))$/],
+            // you can override or append custom trule default tagRules,
+            // it accepts string/RedExp/Function.
+            //
+            // tagRules: [...], // override default rules.
+            // tagRules: defaultTagRules.concat(...), // append new rules
+            // recast: { ... }, custom parameters passed to recast(https://github.com/benjamn/recast).
           }
         }, {
           loader: "awesome-typescript-loader",
@@ -93,9 +102,6 @@ module.exports = {
           }
         }, {
           loader: 'minify-cssinjs-loader',
-          options: {
-            tagRules: [],,
-          }
         }],
       },
     ]

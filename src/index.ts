@@ -98,6 +98,7 @@ function minifyCssInJs(content: string, options: Options = {}) {
           }),
         )
       },
+      ...options.recast,
     },
   })
   minifyAst(ast, options.tagRules || defaultTagRules)
