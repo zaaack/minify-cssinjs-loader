@@ -37,11 +37,13 @@ function walkTree(node: any, type: string, callback: (node: any) => boolean | vo
 }
 
 type TagRule = string | RegExp | ((v: string) => boolean)
-export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-z]+|\([A-Z][a-z]+\))$/]
+export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/]
 
 function minifyCss(css: string | null) {
   if (!css) return css
   css = css
+    .replace(/\/\/.*?\n/g, '\n')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
     .replace(/\s*(\w+)\s*:\s*([^;]+?)\s*(;|}|$)/g, '$1:$2$3')
     .replace(/\s*(\{|\}|,|;|:)\s*/g, '$1')
     .replace(/(^\s+|\s+$)/g, ' ')
