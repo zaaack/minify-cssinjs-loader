@@ -1,0 +1,58 @@
+{
+  "name": "minify-cssinjs-loader",
+  "version": "0.0.0",
+  "description": "A webpack loader to minify your css-in-js.",
+  "main": "./lib/index.js",
+  "typings": "./lib/index",
+  "types": "./lib/index",
+  "scripts": {
+    "build": "del lib && tsc",
+    "test": "mocha --require ts-node/register \"src/test/**/*.test.ts\"",
+    "test:watch": "npm run test -- -w --watch-extensions ts,tsx",
+    "preversion": "npm run build && git add -A"
+  },
+  "pre-commit": [
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hydux/minify-cssinjs-loader.git"
+  },
+  "keywords": [
+    "elm",
+    "hyperapp",
+    "redux",
+    "flux",
+    "react",
+    "picodom"
+  ],
+  "author": "Zack Young",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hydux/minify-cssinjs-loader/issues"
+  },
+  "homepage": "https://github.com/hydux/minify-cssinjs-loader#readme",
+  "devDependencies": {
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.56",
+    "awesome-typescript-loader": "^3.4.1",
+    "clean-webpack-plugin": "^0.1.17",
+    "cross-env": "^5.1.1",
+    "debug": "^3.1.0",
+    "del-cli": "^1.1.0",
+    "mocha": "^4.0.1",
+    "power-assert": "^1.4.4",
+    "pre-commit": "^1.2.2",
+    "ts-node": "^6.0.0",
+    "tslint": "^5.8.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.9.2",
+    "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "cherow": "^1.6.8",
+    "loader-utils": "^1.1.0",
+    "recast": "^0.15.2",
+    "tslib": "^1.9.0"
+  }
+}
