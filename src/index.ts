@@ -78,8 +78,6 @@ function minifyAst(ast, tagRules: TagRule[]) {
         node.value.cooked = minifyCss(node.value.cooked)
         node.value.raw = minifyCss(node.value.raw) || ''
       })
-    } else {
-      print(ast)
     }
   })
 }
