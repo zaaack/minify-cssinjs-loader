@@ -4,7 +4,7 @@ import * as util from 'util'
 
 
 type TagRule = string | RegExp | ((v: string) => boolean)
-export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/]
+export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', 'keyframes', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/]
 
 function minifyCss(css: string) {
   css = css.replace(/\/\/.*?\n/g, '\n')

@@ -59,7 +59,7 @@ module.exports = {
         }, {
           loader: 'minify-cssinjs-loader',
           options: {
-            // default is ['css', 'injectGlobal', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/],
+            // default is ['css', 'injectGlobal', 'keyframes', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/],
             // you can override or append custom trule default tagRules,
             // it accepts string/RedExp/Function.
             //
