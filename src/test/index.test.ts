@@ -10,7 +10,7 @@ function expect(msg: string, input: string, expect: string, opts: Options = {}) 
   }
   it(msg, () => {
     let minified = loader.call(options, input, null, null)
-    assert.equal(minified.trim(), expect.trim())
+    assert.equal(minified.trim(), expect.trim().split('\n').map(s => s.trim()).join('\n'))
   })
 }
 
@@ -50,23 +50,23 @@ describe('parser', () => {
 
       box-shadow: \${a} \${b}px \${c}px \${d};
 
-      color: \${  e  };
+      color: \${ e };
 
 
 
       .aa {
         display: block;
         \${ f };
-        color: \${  e  };
+        color: \${ e };
         & > h2 {
-          color: \${  e  };
+          color: \${ e };
         }
       }
     \`
   `, `
-    css\`display:block;background:url('aa bb') cc dd 1px;\${ c } \`
-    css\`display:block;background:url('aa bb') cc dd 1px;\${ c };\`
-    injectGlobal\`display:block;background:url('aa bb') cc dd 1px;\${ c } box-shadow:\${a} \${b}px \${c}px \${d};color:\${  e  };.aa{display:block;\${ f };color:\${  e  };&>h2{color:\${  e  };}}\`
+    css\`display:block;background:url('aa bb') cc dd 1px;\${c }\`
+    css\`display:block;background:url('aa bb') cc dd 1px;\${c };\`
+    injectGlobal\`display:block;background:url('aa bb') cc dd 1px;\${c }box-shadow:\${a} \${b}px \${c}px \${d};color:\${e };.aa{display:block;\${f };color:\${e };&>h2{color:\${e };}}\`
   `)
 
   expect('styled', `
@@ -101,4 +101,11 @@ describe('parser', () => {
       styled.div\`display:block;\`
       styled(Button)\`display:block;\`
   `)
+
+  expect('nest', `
+  let rootCss = css\`
+    \${colors.map(s => \`color: \${s};\`)}
+    color: red;
+  \`
+  `, `let rootCss = css\`\${colors.map(s =>\`color:\${s};\`)}color:red;\``)
 })

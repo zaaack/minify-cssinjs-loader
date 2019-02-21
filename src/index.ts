@@ -1,58 +1,27 @@
-import * as recast from 'recast'
 import * as loaderUtils from 'loader-utils'
 import './types'
-import cherow from 'cherow'
 import * as util from 'util'
 
-function print(o: any) {
-  console.log(util.inspect(o, false, Infinity, true))
-}
-
-function walkTree(node: any, type: string, callback: (node: any) => boolean | void) {
-  if (!node) {
-    return
-  }
-  if (node.type === type) {
-    let ret = callback(node)
-    if (ret) {
-      return true
-    }
-  }
-  for (const key in node) {
-    let children = node[key]
-    if (children) {
-      if (children.type || children instanceof Array) {
-        if (children.type) {
-          children = [children]
-        }
-        for (const child of children) {
-          let ret = walkTree(child, type, callback)
-          if (ret) {
-            return true
-          }
-        }
-      }
-    }
-  }
-}
 
 type TagRule = string | RegExp | ((v: string) => boolean)
 export const defaultTagRules: TagRule[] = ['css', 'injectGlobal', /^styled(\.[a-z]+|\(([A-Z][a-z]+|['"][a-z]+["'])\))$/]
 
-function minifyCss(css: string | null) {
-  if (!css) return css
-  css = css
-    .replace(/\/\/.*?\n/g, '\n')
+function minifyCss(css: string) {
+  css = css.replace(/\/\/.*?\n/g, '\n')
     .replace(/\/\*[\s\S]*?\*\//g, '')
-    .replace(/\s*(\w+)\s*:\s*([^;]+?)\s*(;|}|$)/g, '$1:$2$3')
-    .replace(/\s*(\{|\}|,|;|:)\s*/g, '$1')
-    .replace(/(^\s+|\s+$)/g, ' ')
-  css = css.replace(/([^};]+){/g, (_, g) => {
-    return g.replace(/\s*([+>~]+)\s*/g, '$1') + '{'
-  })
-  return css
+    .trim()
+  let newCss = css
+    .replace(/([;}])\s*\n\s*/g, '$1')
+    .replace(/\s*([{,;:+>~])\s*/g, '$1')
+  return newCss
 }
 
+function tryFindTag(line: string) {
+  line = line.trim()
+  let m = line.match(/^\s*(?:(?:(?:var|const|let)\s+)?[a-zA-Z\$_]+\s*=\s*)?(.+?)`$/)
+  if (m) return m[1]
+  return
+}
 function isCSSTag(tag: string, tagRules: TagRule[]): boolean {
   if (!tag) return false
   for (const rule of tagRules) {
@@ -73,43 +42,32 @@ function isCSSTag(tag: string, tagRules: TagRule[]): boolean {
   return false
 }
 
-function minifyAst(ast, tagRules: TagRule[]) {
-  walkTree(ast, 'TaggedTemplateExpression', (node) => {
-    if (isCSSTag((recast.print(node.tag).code || '').trim(), tagRules)) {
-      walkTree(node, 'TemplateElement', (node) => {
-        node.value.cooked = minifyCss(node.value.cooked)
-        node.value.raw = minifyCss(node.value.raw) || ''
-      })
-    }
-  })
-}
-
 export interface Options {
-  recast?: any
   tagRules?: TagRule[]
 }
 function minifyCssInJs(content: string, options: Options = {}) {
-  let ast = recast.parse(content, {
-    parser: {
-      parse(source, options) {
-        return require('cherow').parseModule(
-          source,
-          Object.assign(options, {
-            next: true,
-            experimental: true,
-          }),
-        )
-      },
-      ...options.recast,
-    },
-  })
-  minifyAst(ast, options.tagRules || defaultTagRules)
-  try {
-    return recast.print(ast).code
-  } catch (error) {
-    console.error('[minify-cssinjs-loader]', error)
+  let lines = content.split(`\n`)
+  let tagRules = options.tagRules || defaultTagRules
+  let isCss = false
+  let newContents = [] as string[]
+  let css = ''
+  for (let line of lines) {
+    line = line.trim()
+    if (isCss && line === '`') { // end
+      isCss = false
+      newContents[newContents.length - 1] += minifyCss(css) + '`'
+    } else if (isCss) { // css lines
+      css += line + '\n'
+    } else { // find cssinjs
+      let tag = tryFindTag(line)
+      if (tag && isCSSTag(tag, tagRules)) {
+        isCss = true
+        css = ''
+      }
+      newContents.push(line)
+    }
   }
-  return content
+  return newContents.join('\n')
 }
 function loader (content, map, meta) {
   let options: Options = loaderUtils.getOptions(this) || {}
