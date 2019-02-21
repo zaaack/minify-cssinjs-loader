@@ -36,7 +36,7 @@ let cls1 = css`color:red;.cls1{display:block;background:url('...') no-repeat;&>h
 
 ## Usage
 
-awesome-typescript-loader example:
+ts-loader example:
 
 ```js
 
@@ -49,12 +49,8 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: [{
-          loader: "awesome-typescript-loader",
+          loader: "ts-loader",
           options: {
-            useTranspileModule: true,
-            transpileOnly: true,
-            declaration: false,
-            instance: 'at-loader2'
           }
         }, {
           loader: 'minify-cssinjs-loader',
@@ -67,45 +63,12 @@ module.exports = {
             // tagRules: defaultTagRules.concat(...), // append new rules
             // recast: { ... }, custom parameters passed to recast(https://github.com/benjamn/recast).
           }
-        }, {
-          loader: "awesome-typescript-loader",
-          options: {
-            target: 'ESNEXT',
-            declaration: !__DEV__,
-            useTranspileModule: __DEV__,
-          },
         }, ],
       },
     ]
   }
 }
 
-```
-
-babel-loader example:
-
-```js
-module.exports = {
-
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: [{
-          loader: "awesome-typescript-loader",
-          options: {
-            useTranspileModule: true,
-            transpileOnly: true,
-            declaration: false,
-            instance: 'at-loader2'
-          }
-        }, {
-          loader: 'minify-cssinjs-loader',
-        }],
-      },
-    ]
-  }
-}
 ```
 
 ## License
